@@ -1,3 +1,4 @@
 *.idea
-redcapy/test/*
+test/*
 config.cfg
+Pipfile.lock
