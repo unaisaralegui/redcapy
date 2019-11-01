@@ -10,6 +10,7 @@ __status__ = "Development"
 
 # FORMAT keywords
 FORMAT_JSON = "json"
+FORMAT_XML = "xml"
 
 # CONTENT keywords
 CONTENT_ARM = "arm"
@@ -21,8 +22,9 @@ CONTENT_INSTRUMENT = "instrument"
 CONTENT_METADATA = "metadata"
 CONTENT_PROJECT_XML = "project_xml"
 CONTENT_RECORD = "record"
+CONTENT_VERSION = "version"
 
 # FIELDS KEYWORDS
 TOKEN = "token"
 CONTENT = "content"
-FORMAT = "returnFormat"
+FORMAT = "format"
