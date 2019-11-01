@@ -2,3 +2,4 @@
 test/*
 config.cfg
 Pipfile.lock
+.DS_STORE
