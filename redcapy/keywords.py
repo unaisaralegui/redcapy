@@ -8,6 +8,11 @@ __email__ = "usaralegui@gmail.com"
 __status__ = "Development"
 
 
+# FIELDS KEYWORDS
+TOKEN = "token"
+CONTENT = "content"
+FORMAT = "format"
+
 # FORMAT keywords
 FORMAT_JSON = "json"
 FORMAT_XML = "xml"
@@ -23,8 +28,3 @@ CONTENT_METADATA = "metadata"
 CONTENT_PROJECT_XML = "project_xml"
 CONTENT_RECORD = "record"
 CONTENT_VERSION = "version"
-
-# FIELDS KEYWORDS
-TOKEN = "token"
-CONTENT = "content"
-FORMAT = "format"
