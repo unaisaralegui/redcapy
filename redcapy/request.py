@@ -60,7 +60,8 @@ class APIHandler:
         request_data = requests.post(self.__api_url, data=data)
         return request_data
 
-    def __construct_payload(self, content, data_format=None, action=None, record=None):
+    def __construct_payload(self, content, data_format=None, action=None, record=None, typee=None, report_id=None,
+                            instrument=None):
         """
         Construct the payload with specified content and data_format
         :param content: content to obtain from API
@@ -78,6 +79,12 @@ class APIHandler:
             payload[keywords.ACTION] = action
         if record is not None:
             payload[keywords.RECORD] = record
+        if typee is not None:
+            payload[keywords.TYPE] = typee
+        if report_id is not None:
+            payload[keywords.REPORT_ID] = report_id
+        if instrument is not None:
+            payload[keywords.INSTRUMENT] = instrument
         return payload
 
     def __get_data_from_request(self, request_data):
@@ -101,14 +108,20 @@ class APIHandler:
         data = request_data.content
         return data
 
-    def __get_data(self, content, data_format=None, action=None, record=None):
+    def __get_data(self, content, data_format=None, action=None, record=None, typee=None, report_id=None,
+                   instrument=None):
         """
         Obtain data for content and data_format
         :param content: content to obtain
         :param data_format: format of the data to obtain
+        :param action: action to obtain
+        :param record: record to obtain
+        :param typee: type of the data to obtain
         :return: data obtained from server formatted to use inside python
         """
-        payload = self.__construct_payload(content=content, data_format=data_format, action=action, record=record)
+        payload = self.__construct_payload(content=content, data_format=data_format,
+                                           action=action, record=record, typee=typee,
+                                           report_id=report_id, instrument=instrument)
         request_data = self.__call_api(payload=payload)
         data = self.__get_data_from_request(request_data=request_data)
         return data
@@ -228,14 +241,65 @@ class APIHandler:
                 f.write(data)
         return data
 
+    def get_instruments(self, data_format=None):
+        """
+        Get instruments for REDCAP project
+        :param data_format: (default json) format of the data to obtain
+        :return: instruments in the REDCAP project
+        """
+        if data_format is None:
+            data_format = keywords.FORMAT_JSON
+        content = keywords.CONTENT_INSTRUMENT
+        data = self.__get_data(content=content, data_format=data_format)
+        return data
+
     def get_project_info(self, data_format=None):
         """
-        Get project for REDCAP project
+        Get project info for REDCAP project
         :param data_format: (default json) format of the data to obtain
-        :return: project in the REDCAP project
+        :return: project info in the REDCAP project
         """
         if data_format is None:
             data_format = keywords.FORMAT_JSON
         content = keywords.CONTENT_PROJECT
         data = self.__get_data(content=content, data_format=data_format)
+        return data
+
+    def get_records(self, data_format=None):
+        """
+        Get project for REDCAP project
+        :param data_format: (default json) format of the data to obtain
+        :return: records in the REDCAP project
+        """
+        if data_format is None:
+            data_format = keywords.FORMAT_JSON
+        content = keywords.CONTENT_RECORD
+        typee = keywords.TYPE
+        data = self.__get_data(content=content, data_format=data_format, typee=typee)
+        return data
+
+    def get_reports(self, report_id, data_format=None):
+        """
+        Get report for REDCAP project
+        :param report_id: report id to obtain
+        :param data_format: (default json) format of the data to obtain
+        :return: report for specified id in the REDCAP project
+        """
+        if data_format is None:
+            data_format = keywords.FORMAT_JSON
+        content = keywords.CONTENT_REPORT
+        data = self.__get_data(content=content, data_format=data_format, report_id=report_id)
+        return data
+
+    def get_participant_list(self, instrument, data_format=None):
+        """
+        Get participant list for REDCAP project
+        :param instrument: instrument to obtain participant list from
+        :param data_format: (default json) format of the data to obtain
+        :return: participant list in the REDCAP project
+        """
+        if data_format is None:
+            data_format = keywords.FORMAT_JSON
+        content = keywords.CONTENT_PARTICIPANT_LIST
+        data = self.__get_data(content=content, data_format=data_format, instrument=instrument)
         return data
