@@ -1,6 +1,8 @@
 *.idea
-test/*
 config.cfg
 Pipfile.lock
 .DS_STORE
 **pycache**
+test/*
+redcapy.egg-info/*
+dist/*
