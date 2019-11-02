@@ -48,10 +48,7 @@ class APIHandler:
         elif request_data.status_code == 403:
             raise RedCapError("Error obtaining metadata. Check your token.")
         self.metadata = self.__get_data_from_request(request_data=request_data)
-        try:
-            self.redcap_version = self.get_redcap_version()
-        except:
-            raise RedCapError("Determination of REDCap version failed")
+        self.redcap_version = self.get_redcap_version()
 
     def __call_api(self, payload):
         """
@@ -124,6 +121,7 @@ class APIHandler:
             data_format = keywords.FORMAT_JSON
         content = keywords.CONTENT_METADATA
         metadata = self.__get_data(content=content, data_format=data_format)
+        self.metadata = metadata
         return metadata
 
     def get_redcap_version(self):
@@ -135,4 +133,5 @@ class APIHandler:
             return self.redcap_version
         content = keywords.CONTENT_VERSION
         redcap_version = self.__get_data(content=content, data_format=None)
+        self.redcap_version = redcap_version
         return redcap_version
