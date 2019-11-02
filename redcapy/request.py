@@ -16,7 +16,7 @@ from lxml import etree
 
 
 class APIHandler:
-    """Class to interact with RecCap API"""
+    """Class to interact with RedCap API"""
 
     def __init__(self, api_url, token, name='', verify_ssl=True):
         """
@@ -37,12 +37,17 @@ class APIHandler:
     def __check_configuration(self):
         """
         Check the URL and token are valid with API calls to obtain metadata and REDCAP version
-        :return: None (raises redcapy.RedCapError if the ocnfiguration is not OK)
+        :return: None (raises redcapy.RedCapError if the configuration is not OK)
         """
-        try:
-            self.metadata = self.get_metadata()
-        except RedCapError:
-            raise RedCapError("Exporting metadata failed. Check your URL and token.")
+        content = keywords.CONTENT_METADATA
+        data_format = keywords.FORMAT_JSON
+        payload = self.__construct_payload(content=content, data_format=data_format)
+        request_data = self.__call_api(payload=payload)
+        if request_data.status_code == 501:
+            raise RedCapError("Error obtaining metadata. Check your URL.")
+        elif request_data.status_code == 403:
+            raise RedCapError("Error obtaining metadata. Check your token.")
+        self.metadata = self.__get_data_from_request(request_data=request_data)
         try:
             self.redcap_version = self.get_redcap_version()
         except:
