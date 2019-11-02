@@ -60,7 +60,7 @@ class APIHandler:
         request_data = requests.post(self.__api_url, data=data)
         return request_data
 
-    def __construct_payload(self, content, data_format=None):
+    def __construct_payload(self, content, data_format=None, action=None, record=None):
         """
         Construct the payload with specified content and data_format
         :param content: content to obtain from API
@@ -74,6 +74,10 @@ class APIHandler:
         }
         if data_format is not None:
             payload[keywords.FORMAT] = data_format
+        if action is not None:
+            payload[keywords.ACTION] = action
+        if record is not None:
+            payload[keywords.RECORD] = record
         return payload
 
     def __get_data_from_request(self, request_data):
@@ -83,7 +87,7 @@ class APIHandler:
         :return: data in python format (str, json or lxml.etree)
         """
         if request_data.status_code != 200:
-            raise RedCapError(request_data.content)
+            raise RedCapError(f"status_code={request_data.status_code} {request_data.content}")
         try:
             data = request_data.json()
             return data
@@ -97,14 +101,14 @@ class APIHandler:
         data = request_data.content
         return data
 
-    def __get_data(self, content, data_format=None):
+    def __get_data(self, content, data_format=None, action=None, record=None):
         """
         Obtain data for content and data_format
         :param content: content to obtain
         :param data_format: format of the data to obtain
         :return: data obtained from server formatted to use inside python
         """
-        payload = self.__construct_payload(content=content, data_format=data_format)
+        payload = self.__construct_payload(content=content, data_format=data_format, action=action, record=record)
         request_data = self.__call_api(payload=payload)
         data = self.__get_data_from_request(request_data=request_data)
         return data
@@ -112,7 +116,7 @@ class APIHandler:
     def get_metadata(self, data_format=None):
         """
         Get metadata for REDCAP project
-        :param data_format: format of the data to obtain
+        :param data_format: (default json) format of the data to obtain
         :return: metadata for the REDCAP project
         """
         if self.metadata is not None:
@@ -135,3 +139,103 @@ class APIHandler:
         redcap_version = self.__get_data(content=content, data_format=None)
         self.redcap_version = redcap_version
         return redcap_version
+
+    def get_users(self, data_format=None):
+        """
+        Get users for REDCAP project
+        :param data_format: (default json) format of the data to obtain
+        :return: users in the REDCAP project
+        """
+        if data_format is None:
+            data_format = keywords.FORMAT_JSON
+        content = keywords.CONTENT_USER
+        data = self.__get_data(content=content, data_format=data_format)
+        return data
+
+    def get_arms(self, data_format=None):
+        """
+        Get arms for REDCAP project
+        :param data_format: (default json) format of the data to obtain
+        :return: arms in the REDCAP project
+        """
+        if data_format is None:
+            data_format = keywords.FORMAT_JSON
+        content = keywords.CONTENT_ARM
+        data = self.__get_data(content=content, data_format=data_format)
+        return data
+
+    def get_events(self, data_format=None):
+        """
+        Get events for REDCAP project
+        :param data_format: (default json) format of the data to obtain
+        :return: events in the REDCAP project
+        """
+        if data_format is None:
+            data_format = keywords.FORMAT_JSON
+        content = keywords.CONTENT_EVENT
+        data = self.__get_data(content=content, data_format=data_format)
+        return data
+
+    def get_field_names(self, data_format=None):
+        """
+        Get field names for REDCAP project
+        :param data_format: (default json) format of the data to obtain
+        :return: field names in the REDCAP project
+        """
+        if data_format is None:
+            data_format = keywords.FORMAT_JSON
+        content = keywords.CONTENT_FIELD_NAMES
+        data = self.__get_data(content=content, data_format=data_format)
+        return data
+
+    '''
+    def get_file(self, record):
+        """
+        Get file for REDCAP project
+        :return: file in the REDCAP project
+        """
+        content = keywords.CONTENT_FILE
+        action = keywords.ACTION_EXPORT
+        data = self.__get_data(content=content, action=action, record=record)
+        return data
+    '''
+
+    def get_form_event_mapping(self, data_format=None):
+        """
+        Get form event mapping names for REDCAP project
+        :param data_format: (default json) format of the data to obtain
+        :return: field names in the REDCAP project
+        """
+        if data_format is None:
+            data_format = keywords.FORMAT_JSON
+        content = keywords.CONTENT_FIELD_NAMES
+        data = self.__get_data(content=content, data_format=data_format)
+        return data
+
+    def get_instruments_pdf(self, data_format=None, output_file=None):
+        """
+        Get pdf in binary format with instruments (or save directly to file)
+        :param data_format: (default json) format of the data to obtain
+        :param output_file: (optional) file to save pdf to
+        :return: pdf in binary format
+        """
+        if data_format is None:
+            data_format = keywords.FORMAT_JSON
+        content = keywords.CONTENT_PDF
+        data = self.__get_data(content=content, data_format=data_format)
+        if output_file is not None:
+            with open(output_file, "wb") as f:
+                f.write(data)
+        return data
+
+    def get_project_info(self, data_format=None):
+        """
+        Get project for REDCAP project
+        :param data_format: (default json) format of the data to obtain
+        :return: project in the REDCAP project
+        """
+        if data_format is None:
+            data_format = keywords.FORMAT_JSON
+        content = keywords.CONTENT_PROJECT
+        data = self.__get_data(content=content, data_format=data_format)
+        return data

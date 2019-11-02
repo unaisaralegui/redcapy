@@ -12,6 +12,8 @@ __status__ = "Development"
 TOKEN = "token"
 CONTENT = "content"
 FORMAT = "format"
+ACTION = "action"
+RECORD = "record"
 
 # FORMAT keywords
 FORMAT_JSON = "json"
@@ -28,3 +30,9 @@ CONTENT_METADATA = "metadata"
 CONTENT_PROJECT_XML = "project_xml"
 CONTENT_RECORD = "record"
 CONTENT_VERSION = "version"
+CONTENT_USER = "user"
+CONTENT_PDF = "pdf"
+CONTENT_PROJECT = "project"
+
+# ACTION keywords
+ACTION_EXPORT = "export"
