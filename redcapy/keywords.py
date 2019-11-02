@@ -9,15 +9,14 @@ __status__ = "Development"
 
 
 # FIELDS KEYWORDS
-TOKEN = "token"
+ACTION = "action"
 CONTENT = "content"
 FORMAT = "format"
-ACTION = "action"
 RECORD = "record"
+TOKEN = "token"
 
-# FORMAT keywords
-FORMAT_JSON = "json"
-FORMAT_XML = "xml"
+# ACTION keywords
+ACTION_EXPORT = "export"
 
 # CONTENT keywords
 CONTENT_ARM = "arm"
@@ -27,12 +26,13 @@ CONTENT_FILE = "file"
 CONTENT_FORM_EVENT_MAPPING = "formEventMapping"
 CONTENT_INSTRUMENT = "instrument"
 CONTENT_METADATA = "metadata"
-CONTENT_PROJECT_XML = "project_xml"
-CONTENT_RECORD = "record"
-CONTENT_VERSION = "version"
-CONTENT_USER = "user"
 CONTENT_PDF = "pdf"
 CONTENT_PROJECT = "project"
+CONTENT_PROJECT_XML = "project_xml"
+CONTENT_RECORD = "record"
+CONTENT_USER = "user"
+CONTENT_VERSION = "version"
 
-# ACTION keywords
-ACTION_EXPORT = "export"
+# FORMAT keywords
+FORMAT_JSON = "json"
+FORMAT_XML = "xml"
