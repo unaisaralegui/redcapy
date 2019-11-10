@@ -17,6 +17,8 @@ RECORD = "record"
 REPORT_ID = "report_id"
 TOKEN = "token"
 TYPE = "type"
+DATE_RANGE_BEGIN = "dateRangeBegin"
+DATE_RANGE_END = "dateRangeEnd"
 
 # ACTION keywords
 ACTION_EXPORT = "export"

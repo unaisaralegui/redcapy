@@ -9,10 +9,25 @@ __status__ = "Development"
 
 
 from . import keywords
-from . import RedCapError
+from .error import RedCapError
 import requests
 import json
+import datetime
 from lxml import etree
+
+
+def format_date(datee: datetime.datetime):
+    """
+    Get date formatted to use in REDCAP API
+    :param datee: datetime.datetime object
+    :return:
+    """
+    try:
+        date_format = "%Y-%m-%d %H:%M:%S"
+        datee = datee.strftime(date_format)
+        return datee
+    except Exception as ex:
+        raise RedCapError("Error formatting date. Provide datetime.datetime date")
 
 
 class APIHandler:
@@ -20,7 +35,7 @@ class APIHandler:
 
     def __init__(self, api_url, token, name='', verify_ssl=True):
         """
-
+        Main function to load APIHandler class
         :param api_url: API URL to the REDCap server
         :param token: API token for the project
         :param name: name of the project (optional)
@@ -61,7 +76,7 @@ class APIHandler:
         return request_data
 
     def __construct_payload(self, content, data_format=None, action=None, record=None, typee=None, report_id=None,
-                            instrument=None):
+                            instrument=None, date_range_begin=None, date_range_end=None):
         """
         Construct the payload with specified content and data_format
         :param content: content to obtain from API
@@ -85,6 +100,10 @@ class APIHandler:
             payload[keywords.REPORT_ID] = report_id
         if instrument is not None:
             payload[keywords.INSTRUMENT] = instrument
+        if date_range_begin is not None:
+            payload[keywords.DATE_RANGE_BEGIN] = date_range_begin
+        if date_range_end is not None:
+            payload[keywords.DATE_RANGE_END] = date_range_end
         return payload
 
     def __get_data_from_request(self, request_data):
@@ -109,7 +128,7 @@ class APIHandler:
         return data
 
     def __get_data(self, content, data_format=None, action=None, record=None, typee=None, report_id=None,
-                   instrument=None):
+                   instrument=None, date_range_begin=None, date_range_end=None):
         """
         Obtain data for content and data_format
         :param content: content to obtain
@@ -121,7 +140,8 @@ class APIHandler:
         """
         payload = self.__construct_payload(content=content, data_format=data_format,
                                            action=action, record=record, typee=typee,
-                                           report_id=report_id, instrument=instrument)
+                                           report_id=report_id, instrument=instrument,
+                                           date_range_begin=date_range_begin, date_range_end=date_range_end)
         request_data = self.__call_api(payload=payload)
         data = self.__get_data_from_request(request_data=request_data)
         return data
@@ -265,17 +285,27 @@ class APIHandler:
         data = self.__get_data(content=content, data_format=data_format)
         return data
 
-    def get_records(self, data_format=None):
+    def get_records(self, data_format=None, date_range_begin: datetime.datetime = None,
+                    date_range_end: datetime.datetime = None):
         """
         Get project for REDCAP project
         :param data_format: (default json) format of the data to obtain
+        :param date_range_end: [optional] get only records registered before data in server time
+        (date format YYYY-MM-DD HH:MM:SS)
+        :param date_range_begin: [optional] get only records registered after data in server time
+        (date format YYYY-MM-DD HH:MM:SS)
         :return: records in the REDCAP project
         """
         if data_format is None:
             data_format = keywords.FORMAT_JSON
+        if date_range_begin is not None:
+            date_range_begin = format_date(datee=date_range_begin)
+        if date_range_end is not None:
+            date_range_end = format_date(datee=date_range_end)
         content = keywords.CONTENT_RECORD
         typee = keywords.TYPE
-        data = self.__get_data(content=content, data_format=data_format, typee=typee)
+        data = self.__get_data(content=content, data_format=data_format, typee=typee,
+                               date_range_begin=date_range_begin, date_range_end=date_range_end)
         return data
 
     def get_reports(self, report_id, data_format=None):
