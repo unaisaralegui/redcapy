@@ -6,3 +6,4 @@ Pipfile.lock
 test/*
 redcapy.egg-info/*
 dist/*
+build/*

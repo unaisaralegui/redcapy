@@ -19,6 +19,7 @@ TOKEN = "token"
 TYPE = "type"
 DATE_RANGE_BEGIN = "dateRangeBegin"
 DATE_RANGE_END = "dateRangeEnd"
+FILTER_LOGIC = "filterLogic"
 
 # ACTION keywords
 ACTION_EXPORT = "export"

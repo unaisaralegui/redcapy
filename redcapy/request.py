@@ -76,7 +76,7 @@ class APIHandler:
         return request_data
 
     def __construct_payload(self, content, data_format=None, action=None, record=None, typee=None, report_id=None,
-                            instrument=None, date_range_begin=None, date_range_end=None):
+                            instrument=None, date_range_begin=None, date_range_end=None, filter_logic=None):
         """
         Construct the payload with specified content and data_format
         :param content: content to obtain from API
@@ -104,6 +104,9 @@ class APIHandler:
             payload[keywords.DATE_RANGE_BEGIN] = date_range_begin
         if date_range_end is not None:
             payload[keywords.DATE_RANGE_END] = date_range_end
+        print(f"filter_logic: {filter_logic}")
+        if filter_logic is not None:
+            payload[keywords.FILTER_LOGIC] = filter_logic
         return payload
 
     def __get_data_from_request(self, request_data):
@@ -128,7 +131,7 @@ class APIHandler:
         return data
 
     def __get_data(self, content, data_format=None, action=None, record=None, typee=None, report_id=None,
-                   instrument=None, date_range_begin=None, date_range_end=None):
+                   instrument=None, date_range_begin=None, date_range_end=None, filter_logic=None):
         """
         Obtain data for content and data_format
         :param content: content to obtain
@@ -136,12 +139,15 @@ class APIHandler:
         :param action: action to obtain
         :param record: record to obtain
         :param typee: type of the data to obtain
+        :param filter_logic: [optional] get only records which evaluate to true the provided logic
         :return: data obtained from server formatted to use inside python
         """
         payload = self.__construct_payload(content=content, data_format=data_format,
                                            action=action, record=record, typee=typee,
                                            report_id=report_id, instrument=instrument,
-                                           date_range_begin=date_range_begin, date_range_end=date_range_end)
+                                           date_range_begin=date_range_begin, date_range_end=date_range_end,
+                                           filter_logic=filter_logic)
+        print(payload)
         request_data = self.__call_api(payload=payload)
         data = self.__get_data_from_request(request_data=request_data)
         return data
@@ -286,7 +292,7 @@ class APIHandler:
         return data
 
     def get_records(self, data_format=None, date_range_begin: datetime.datetime = None,
-                    date_range_end: datetime.datetime = None):
+                    date_range_end: datetime.datetime = None, filter_logic: str = None):
         """
         Get project for REDCAP project
         :param data_format: (default json) format of the data to obtain
@@ -294,6 +300,7 @@ class APIHandler:
         (date format YYYY-MM-DD HH:MM:SS)
         :param date_range_begin: [optional] get only records registered after data in server time
         (date format YYYY-MM-DD HH:MM:SS)
+        :param filter_logic: [optional] get only records which evaluate to true the provided logic
         :return: records in the REDCAP project
         """
         if data_format is None:
@@ -305,7 +312,8 @@ class APIHandler:
         content = keywords.CONTENT_RECORD
         typee = keywords.TYPE
         data = self.__get_data(content=content, data_format=data_format, typee=typee,
-                               date_range_begin=date_range_begin, date_range_end=date_range_end)
+                               date_range_begin=date_range_begin, date_range_end=date_range_end,
+                               filter_logic=filter_logic)
         return data
 
     def get_reports(self, report_id, data_format=None):
