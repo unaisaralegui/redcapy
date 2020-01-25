@@ -5,7 +5,7 @@ with open("README.md", "r") as fh:
 
 setuptools.setup(
     name="redcapy",
-    version="0.3",
+    version="0.4",
     author="Unai Saralegui",
     author_email="usaralegui@gmail.com",
     description="Python package to access REDCAP API",
@@ -15,7 +15,6 @@ setuptools.setup(
     packages=setuptools.find_packages(),
     install_requires=[
         'requests',
-        'lxml',
     ],
     classifiers=[
         "Programming Language :: Python :: 3",

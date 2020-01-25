@@ -13,7 +13,6 @@ from .error import RedCapError
 import requests
 import json
 import datetime
-from lxml import etree
 
 
 def format_date(datee: datetime.datetime):
@@ -120,11 +119,6 @@ class APIHandler:
             data = request_data.json()
             return data
         except json.decoder.JSONDecodeError as e:
-            pass
-        try:
-            data = etree.fromstring(request_data.content)
-            return data
-        except etree.XMLSyntaxError as ex:
             pass
         data = request_data.content
         return data
