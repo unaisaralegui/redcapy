@@ -104,7 +104,6 @@ class APIHandler:
             payload[keywords.DATE_RANGE_BEGIN] = date_range_begin
         if date_range_end is not None:
             payload[keywords.DATE_RANGE_END] = date_range_end
-        print(f"filter_logic: {filter_logic}")
         if filter_logic is not None:
             payload[keywords.FILTER_LOGIC] = filter_logic
         return payload
@@ -147,7 +146,6 @@ class APIHandler:
                                            report_id=report_id, instrument=instrument,
                                            date_range_begin=date_range_begin, date_range_end=date_range_end,
                                            filter_logic=filter_logic)
-        print(payload)
         request_data = self.__call_api(payload=payload)
         data = self.__get_data_from_request(request_data=request_data)
         return data
