@@ -1,0 +1,17 @@
+name: Publish
+on:
+  release:
+    types: [published, created, edited]
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Prepare repo
+        uses: actions/checkout@master
+      - name: Test
+        uses: onichandame/python-test-action@master
+      - name: Upload
+        uses: onichandame/pip-upload-action@master
+        with:
+          username: ${{ secrets.PIP_TOKEN }}
+          password: ${{ secrets.PIP_PASSWORD }}
