@@ -1,17 +1,15 @@
 name: Publish
 on:
   release:
-    types: [published, created, edited]
+    types: [published]
 jobs:
   publish:
     runs-on: ubuntu-latest
     steps:
       - name: Prepare repo
         uses: actions/checkout@master
-      - name: Test
-        uses: onichandame/python-test-action@master
       - name: Upload
-        uses: onichandame/pip-upload-action@master
+        uses: pypa/gh-action-pypi-publish@release/v1
         with:
-          username: ${{ secrets.PIP_TOKEN }}
-          password: ${{ secrets.PIP_PASSWORD }}
+          user: __token__
+          password: ${{ secrets.PYPI_API_TOKEN }}
