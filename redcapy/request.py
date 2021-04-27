@@ -15,16 +15,16 @@ import json
 import datetime
 
 
-def format_date(datee: datetime.datetime):
+def format_date(date: datetime.datetime):
     """
     Get date formatted to use in REDCAP API
-    :param datee: datetime.datetime object
+    :param date: datetime.datetime object
     :return:
     """
     try:
         date_format = "%Y-%m-%d %H:%M:%S"
-        datee = datee.strftime(date_format)
-        return datee
+        date = date.strftime(date_format)
+        return date
     except Exception as ex:
         raise RedCapError("Error formatting date. Provide datetime.datetime date")
 
@@ -298,9 +298,9 @@ class APIHandler:
         if data_format is None:
             data_format = keywords.FORMAT_JSON
         if date_range_begin is not None:
-            date_range_begin = format_date(datee=date_range_begin)
+            date_range_begin = format_date(date=date_range_begin)
         if date_range_end is not None:
-            date_range_end = format_date(datee=date_range_end)
+            date_range_end = format_date(date=date_range_end)
         content = keywords.CONTENT_RECORD
         typee = keywords.TYPE
         data = self.__get_data(content=content, data_format=data_format, typee=typee,
